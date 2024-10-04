@@ -1,0 +1,3 @@
+---
+infra_env: external # This variable is used to determine that machine in this zone are already provisioned and can be configured by Catapult
+default_connection_plugin: ansible.builtin.ssh

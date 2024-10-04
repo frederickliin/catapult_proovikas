@@ -1,0 +1,15 @@
+# Comment in this file if Providentia is used as inventory source and fill it with your own values
+
+# # Plugin that will be used to parse the inventory from Providentia instance
+# # This will be installed automatically when running Catapult
+# plugin: nova.core.providentia_v3
+
+# # The URL of the Providentia instance you have set up or have access to
+# providentia_host: https://providentia.example.com
+
+# # The project Abbreviation defined in Providentia
+# project: my_project
+
+# # The Oauth2 provider URL where to request the token to access Providentia
+# # The example below is for Keycloak with a realm named SSO
+# sso_token_url: https://kc.example.com/auth/realms/SSO/protocol/openid-connect/token

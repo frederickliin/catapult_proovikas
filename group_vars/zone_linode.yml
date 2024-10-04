@@ -1,0 +1,2 @@
+---
+infra_env: linode # This variable is used to determine which cloud provider roles and tasks to use.

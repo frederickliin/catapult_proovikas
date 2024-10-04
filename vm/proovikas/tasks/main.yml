@@ -1,0 +1,22 @@
+---
+- name: install nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Generate self-signed cert
+  shell: |
+    openssl genrsa -out "/etc/ssl/private/{{ hostname }}.{{ domain }}.key" 2048
+    openssl req -key "/etc/ssl/private/{{ hostname }}.{{ domain }}.key" -new -out "/etc/ssl/certs/{{ hostname }}.{{ domain }}.csr" -subj "/C=XX/ST=StateName/L=CityName/O=CompanyName/OU=CompanySectionName/CN={{ hostname }}.{{ domain }}"
+    openssl x509 -signkey "/etc/ssl/private/{{ hostname }}.{{ domain }}.key" -in "/etc/ssl/certs/{{ hostname }}.{{ domain }}.csr" -req -days 365 -out "/etc/ssl/certs/{{ hostname }}.{{ domain }}.crt"
+
+- name: nginx conf
+  ansible.builtin.template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
+    mode: '0644'
+
+- name: start/restart nginx
+  service:
+    name: nginx
+    state: restarted

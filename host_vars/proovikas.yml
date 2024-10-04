@@ -1,0 +1,82 @@
+---
+##############
+# Connection #
+##############
+
+# Default addresses for monolith applications
+monolith_providentia_fqdn: providentia.{{ domain }}
+monolith_nexus_fqdn: repo.{{ domain }}
+monolith_keycloak_fqdn: login.{{ domain }}
+monolith_vault_fqdn: secrets.{{ domain }}
+
+
+connection_address: 
+ansible_deployer_username: 
+ansible_deployer_password: 
+sudo_requires_password: true
+hostname: proovikas
+domain: example.com
+ad_domain_name: example.com
+fqdn: "{{ hostname }}.{{ domain }}"
+
+#########
+# Vault #
+#########
+
+vault_binddn: CN=svc_vault,OU=Service Accounts,DC=example,DC=com
+vault_bindpass: vault_Password.123
+vault_groupdn: OU=Vault,DC=example,DC=com
+vault_upndomain: "{{ domain }}"
+vault_ldaps_url: ldaps://dc1.example.com
+vault_userdn: DC=example,DC=com
+vault_ldap_admin_group_name: vault-admins
+
+############
+# Keycloak #
+############
+
+keycloak_realms:
+  - realm_name: Apps
+    sso_session_idle_timeout: 172800 ## 2 days
+    sso_session_max_lifespan: 604800 ## 7 days
+    configure_ldap: true
+    ldap_server: ldaps://dc1.example.com
+    users_search_dn: DC=example,DC=com
+    bind_user_dn: CN=svc_keycloak,OU=Service Accounts,DC=example,DC=com
+    bind_user_password: keycloak_Password.123
+    custom_user_search_filter:
+      - "(&(objectClass=person)(mail=*))"
+
+    ldap_role_mappers:
+      - client_name: Providentia
+        ldap_groups_dn: OU=Providentia,DC=example,DC=com
+
+    clients:
+      - client_name: Providentia
+        admin_uri: https://{{ monolith_providentia_fqdn }}
+        base_uri: https://{{ monolith_providentia_fqdn }}
+        redirect_uris:
+          - https://{{ monolith_providentia_fqdn }}/*
+        root_uri: https://{{ monolith_providentia_fqdn }}
+        weborigin_uris:
+          - https://{{ monolith_providentia_fqdn }}/*
+        create_client_scope: true
+
+# ###############
+# # Providentia #
+# ###############
+
+providentia_app_fqdn: "{{ monolith_providentia_fqdn }}"
+providentia_deploy_branch: v24.3.3 # Update as needed
+
+#########
+# Nexus #
+#########
+
+nexus_ldap_name: "{{ domain }}"
+nexus_ldap_host: dc1.example.com
+nexus_ldap_search_base: DC=example,DC=com
+nexus_bind_user_dn: CN=svc_nexus,OU=Service Accounts,DC=example,DC=com
+nexus_groups_dn_under_searchbase: OU=Nexus
+nexus_bind_dn_password: nexus_Password.123
+nexus_ldap_administrators_group: nexus-admins

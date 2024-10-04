@@ -1,0 +1,23 @@
+---
+# This file contains example default variables required for this project.
+# Everything added here can be overridden in the respective group_vars/host_vars files or role defaults.
+
+##########
+# VMware #
+##########
+
+vcenter_hostname: vsphere.example.com
+datacenter: My Datacenter
+projects_parent_folder: Project Everything
+cluster: My Cluster
+folder: "{{ projects_parent_folder }}/Project Everything"
+datastore: DS01
+resource_pool: Project Everything
+infra_env: vsphere
+linked_clone_status: true
+
+########
+# MISC #
+########
+
+save_secrets_to_vault: false # Set to true to save secrets to HashiCorp Vault if you have it configured
