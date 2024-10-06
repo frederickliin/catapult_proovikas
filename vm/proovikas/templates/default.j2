@@ -1,11 +1,11 @@
 server {
-    listen {{ hostname }}.{{ domain }}:80;
+    listen 80;
 
     server_name {{ hostname }}.{{ domain }};
     return 301 https://$host$request_uri;
 }
 server {
-    listen {{ hostname }}.{{ domain }}:443 ssl;
+    listen 443 ssl;
     server_name {{ hostname }}.{{ domain }};
     ssl_certificate /etc/ssl/certs/{{ hostname }}.{{ domain }}.crt;
     ssl_certificate_key /etc/ssl/private/{{ hostname }}.{{ domain }}.key;

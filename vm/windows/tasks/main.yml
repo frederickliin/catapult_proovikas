@@ -1,0 +1,29 @@
+---
+# I wish this worked lol
+# - name: Disable Tamper Protection
+#   win_shell: |
+#     Set-MpPreference -DisableTamperProtection $true
+
+- name: Disable UAC
+  ansible.windows.win_shell: |
+    cmd.exe /c "C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f"
+  args:
+    executable: powershell
+
+- name: Restart the host
+  win_reboot:
+    msg: "Restarting to apply changes."
+    reboot_timeout: 600
+
+#The following won't do anything because tamper protection is enabled :(
+- name: Disable stuff
+  ansible.windows.win_shell: |
+    Set-MpPreference -DisableRealtimeMonitoring $true
+    Set-MpPreference -DisableIOAVProtection $true
+    Set-MPPreference -DisableBehaviorMonitoring $true
+    Set-MPPreference -DisableBlockAtFirstSeen $true
+    Set-MPPreference -DisableEmailScanning $true
+    Set-MPPReference -DisableScriptScanning $true
+    Set-MpPreference -ExclusionExtension "ps1"
+  args:
+    executable: powershell
